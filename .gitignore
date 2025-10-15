@@ -1,0 +1,39 @@
+# Python
+*.py[cod]
+__pycache__/
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environment
+.venv/
+.env/
+env/
+venv/
+ENV/
+
+# Django
+*.sqlite3
+db.sqlite3
+/static/
+media/
+*.log
+*.pot
+*.py[co]
+
+# PyCharm / IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/
+
+# Byte-compiled / cache files
+*.egg
+*.egg-info/
+.eggs/
+*.mo
+*.swp
+*~

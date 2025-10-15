@@ -1,0 +1,23 @@
+from django.db import models
+
+
+class Book(models.Model):
+    class CoverChoices(models.TextChoices):
+        HARD = "HARD", "Hard Cover"
+        SOFT = "SOFT", "Soft Cover"
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
+    cover = models.CharField(
+        max_length=4,
+        choices=CoverChoices.choices,
+        default=CoverChoices.SOFT
+    )
+    inventory = models.PositiveIntegerField()
+    daily_fee = models.DecimalField(max_digits=5, decimal_places=2)
+
+    class Meta:
+        ordering = ["author"]
+        verbose_name_plural = "books"
+
+    def __str__(self):
+        return f"{self.title} by {self.author}"
