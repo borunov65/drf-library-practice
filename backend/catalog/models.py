@@ -16,7 +16,7 @@ class Book(models.Model):
     daily_fee = models.DecimalField(max_digits=5, decimal_places=2)
 
     class Meta:
-        ordering = ["title"]
+        ordering = ["author"]
         verbose_name_plural = "books"
 
     def __str__(self):
