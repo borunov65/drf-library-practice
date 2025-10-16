@@ -2,6 +2,7 @@ from rest_framework import viewsets, mixins
 
 from .models import Book
 from .serializers import BookSerializer, BookListSerializer
+from .permissions import IsAdminOrReadOnly
 
 
 class BookViewSet(
@@ -13,6 +14,7 @@ class BookViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = Book.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_serializer_class(self):
         if self.action == "list":
