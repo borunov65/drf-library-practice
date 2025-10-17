@@ -1,10 +1,11 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from catalog.models import Book
 
 
+User = get_user_model()
 BOOK_URL = reverse("catalog:book-list")
 
 
@@ -13,10 +14,12 @@ class IsAdminOrReadOnlyPermissionTests(APITestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(
-            username="user", password="testpass123"
+            email="user@example.com",
+            password="testpass123"
         )
         self.admin_user = User.objects.create_superuser(
-            username="admin", password="adminpass123", email="admin@example.com"
+            password="adminpass123",
+            email="admin@example.com"
         )
         self.book = Book.objects.create(
             title="Test Book",
