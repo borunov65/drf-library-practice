@@ -41,7 +41,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "catalog",
+    "user",
 ]
+
+AUTH_USER_MODEL = "user.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -132,7 +135,7 @@ REST_FRAMEWORK = {
         "catalog.permissions.IsAdminOrReadOnly",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "user.authentication.CustomHeaderJWTAuthentication",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_THROTTLE_CLASSES": [
