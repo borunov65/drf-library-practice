@@ -11,7 +11,6 @@ BOOK_URL = reverse("catalog:book-list")
 class BookApiTests(APITestCase):
     def setUp(self):
         self.admin_user = User.objects.create_superuser(
-            username="admin",
             email="admin@example.com",
             password="adminpass"
         )
