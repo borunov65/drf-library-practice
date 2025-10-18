@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "catalog",
     "user",
+    "borrowing",
 ]
 
 AUTH_USER_MODEL = "user.User"
