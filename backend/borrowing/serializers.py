@@ -47,3 +47,13 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
         if book.inventory <= 0:
             raise serializers.ValidationError("This book is out of stock.")
         return book
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        book = validated_data['book']
+
+        book.inventory -= 1
+        book.save()
+
+        borrowing = Borrowing.objects.create(user=user, **validated_data)
+        return borrowing
