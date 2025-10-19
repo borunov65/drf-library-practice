@@ -24,6 +24,10 @@ class BorrowingViewSet(
 
         if not user.is_staff:
             queryset = queryset.filter(user=user)
+        elif user.is_staff:
+            user_id = self.request.query_params.get("user_id")
+            if user_id:
+                queryset = queryset.filter(user__id=user_id)
 
         is_active_param = self.request.query_params.get("is_active")
         if is_active_param is not None:

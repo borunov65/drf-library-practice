@@ -20,7 +20,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 class BorrowingListSerializer(serializers.ModelSerializer):
     book = BookDetailSerializer(read_only=True)
     user = UserDetailSerializer(read_only=True)
-    is_active = serializers.BooleanField(read_only=True)
+    is_active = serializers.SerializerMethodField()
 
     class Meta:
         model = Borrowing
