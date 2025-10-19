@@ -20,6 +20,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 class BorrowingListSerializer(serializers.ModelSerializer):
     book = BookDetailSerializer(read_only=True)
     user = UserDetailSerializer(read_only=True)
+    is_active = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Borrowing
@@ -30,7 +31,11 @@ class BorrowingListSerializer(serializers.ModelSerializer):
             "actual_return_date",
             "book",
             "user",
+            "is_active"
         ]
+
+    def get_is_active(self, obj):
+        return obj.actual_return_date is None
 
 
 class BorrowingCreateSerializer(serializers.ModelSerializer):
