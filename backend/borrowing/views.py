@@ -1,5 +1,9 @@
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django.utils import timezone
+
 from .models import Borrowing
 from .serializers import BorrowingListSerializer, BorrowingCreateSerializer
 
@@ -40,3 +44,23 @@ class BorrowingViewSet(
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    @action(detail=True, methods=["post"], url_path="return")
+    def return_borrowing(self, request, pk=None):
+        borrowing = self.get_object()
+
+        if borrowing.actual_return_date:
+            return Response(
+                {"error": "This borrowing has already been returned."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        borrowing.actual_return_date = timezone.now().date()
+        borrowing.book.inventory += 1
+        borrowing.book.save()
+        borrowing.save()
+
+        return Response(
+            {"message": "Book returned successfully."},
+            status=status.HTTP_200_OK,
+        )

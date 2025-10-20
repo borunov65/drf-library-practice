@@ -110,3 +110,52 @@ class BorrowingCreateTests(BaseBorrowingTestCase):
         }
         res = self.client.post(self.url, data, format="json")
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class BorrowingReturnTests(BaseBorrowingTestCase):
+    def setUp(self):
+        super().setUp()
+        self.borrowing = Borrowing.objects.create(
+            user=self.user,
+            book=self.book1,
+            borrow_date="2025-10-10",
+            expected_return_date="2025-10-20"
+        )
+        self.url_return = reverse("borrowing:borrowing-return-borrowing", args=[self.borrowing.id])
+
+    def test_authenticated_user_can_return_book(self):
+        """User can return their borrowing and inventory increases"""
+        self.authenticate(self.user)
+        res = self.client.post(self.url_return)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn("message", res.data)
+        self.assertEqual(res.data["message"], "Book returned successfully.")
+
+        self.borrowing.refresh_from_db()
+        self.book1.refresh_from_db()
+
+        self.assertIsNotNone(self.borrowing.actual_return_date)
+        self.assertEqual(self.book1.inventory, 4)
+
+    def test_cannot_return_twice(self):
+        """User cannot return the same borrowing twice"""
+        self.authenticate(self.user)
+        self.client.post(self.url_return)  # first return
+        res = self.client.post(self.url_return)  # second return
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("error", res.data)
+        self.assertEqual(res.data["error"], "This borrowing has already been returned.")
+
+    def test_unauthenticated_user_cannot_return(self):
+        """Non-authenticated users cannot return a borrowing"""
+        res = self.client.post(self.url_return)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_admin_can_return_other_user_borrowing(self):
+        """Admin user can return another user's borrowing"""
+        self.authenticate(self.admin_user)
+        res = self.client.post(self.url_return)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.borrowing.refresh_from_db()
+        self.assertIsNotNone(self.borrowing.actual_return_date)
