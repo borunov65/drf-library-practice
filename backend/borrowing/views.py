@@ -56,6 +56,8 @@ class BorrowingViewSet(
             )
 
         borrowing.actual_return_date = timezone.now().date()
+        borrowing.book.inventory += 1
+        borrowing.book.save()
         borrowing.save()
 
         return Response(
