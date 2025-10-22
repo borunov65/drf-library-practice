@@ -1,5 +1,6 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+
 class IsAdminOrReadOnly(BasePermission):
     """
     The admin has access to all methods.

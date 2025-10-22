@@ -11,13 +11,40 @@ class BaseBorrowingTestCase(APITestCase):
     def setUp(self):
         self.client = APIClient()
 
-        self.user = User.objects.create_user(email="user@example.com", password="password123")
-        self.other_user = User.objects.create_user(email="other@example.com", password="password123")
-        self.admin_user = User.objects.create_superuser(email="admin@example.com", password="admin123")
+        self.user = User.objects.create_user(
+            email="user@example.com",
+            password="password123"
+        )
+        self.other_user = User.objects.create_user(
+            email="other@example.com",
+            password="password123"
+        )
+        self.admin_user = User.objects.create_superuser(
+            email="admin@example.com",
+            password="admin123"
+        )
 
-        self.book1 = Book.objects.create(title="Book 1", author="Author 1", cover="HARD", inventory=3, daily_fee=5)
-        self.book2 = Book.objects.create(title="Book 2", author="Author 2", cover="SOFT", inventory=2, daily_fee=4)
-        self.book_out_of_stock = Book.objects.create(title="Out of Stock", author="Author 3", cover="SOFT", inventory=0, daily_fee=3)
+        self.book1 = Book.objects.create(
+            title="Book 1",
+            author="Author 1",
+            cover="HARD",
+            inventory=3,
+            daily_fee=5
+        )
+        self.book2 = Book.objects.create(
+            title="Book 2",
+            author="Author 2",
+            cover="SOFT",
+            inventory=2,
+            daily_fee=4
+        )
+        self.book_out_of_stock = Book.objects.create(
+            title="Out of Stock",
+            author="Author 3",
+            cover="SOFT",
+            inventory=0,
+            daily_fee=3
+        )
 
         self.url = reverse("borrowing:borrowing-list")
 
@@ -29,7 +56,10 @@ class BorrowingReadOnlyTests(BaseBorrowingTestCase):
     def setUp(self):
         super().setUp()
         self.borrowing1 = Borrowing.objects.create(
-            user=self.user, book=self.book1, borrow_date="2025-10-01", expected_return_date="2025-10-10"
+            user=self.user,
+            book=self.book1,
+            borrow_date="2025-10-01",
+            expected_return_date="2025-10-10"
         )
         self.borrowing2 = Borrowing.objects.create(
             user=self.other_user, book=self.book2, borrow_date="2025-10-05",
